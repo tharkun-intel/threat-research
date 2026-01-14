@@ -109,6 +109,20 @@ I also found a 'digital fossil': a commented-out text block targeting India and 
   <em>Figure 7: 'digital fossil' in the HTML file.</em>
 </p>
 
+## ⚔️ Tactics, Techniques, and Procedures (TTPs)
+
+| Tactic | Technique | Procedure (Observed in Sample) |
+| :--- | :--- | :--- |
+| **Initial Access** | Phishing via Social Media | Distributed via **Facebook Messenger** using deep links (`fb-messenger://`) to trigger the mobile app directly. |
+| **Defense Evasion** | Obfuscated Files or Information | Core logic for the "sharing loop" was hidden using `document.write(unescape('%20...'))` to bypass static analysis. |
+| **Defense Evasion** | Virtualization/Sandbox Evasion | The analytics script checks for `window.navigator.webdriver`, `_phantom`, and `Cypress`. If detected, it stops tracking to hide from security researchers. |
+| **Defense Evasion** | Masquerading | The site mimics the **GCash** brand identity (logos, colors) and uses a deceptively similar domain name (`gcash6...`). |
+| **Execution** | User Execution | Relies on the user manually clicking "Share" buttons to propagate the scam. |
+| **Persistence** | Browser Session Manipulation | Uses **History Hijacking** (`history.pushState` + `onhashchange`) to trap the user on the page, reloading the site if they attempt to click "Back." |
+| **Discovery** | System Information Discovery | Scripts check `window.innerWidth` and User-Agent to determine if the victim is on a mobile device vs. desktop. |
+| **Command & Control** | Web Service | Uses **Plausible Analytics** (`/api/event`) to beacon victim data back to the attacker's dashboard (`tj.16gift.com`). |
+| **Impact** | Social Engineering / Fraud | Uses a "Viral Loop" mechanism (fake progress bar, fake errors) to force victims to spam their contacts, driving traffic to affiliate redirection links. |
+
 ## 🛡️ Indicators of Compromise (IOCs)
 
 | Type | Value | Context |
