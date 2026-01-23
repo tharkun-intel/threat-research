@@ -4,37 +4,131 @@
     <meta name="google-site-verification" content="20vrASaWXzRUt6oNQ4MHJC3sxOlZxAPO97i6WEBNQAc" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Cybersecurity Research</title>
+    <title>Tharkun Dur | Threat Research</title>
     
-    </head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- GENERAL SETTINGS --- */
+        body {
+            background-color: #0d0d0d; /* Void Black */
+            color: #b3b3b3; /* Light Grey Text */
+            font-family: 'VT323', monospace; /* The Pixel Font */
+            font-size: 1.4rem; /* Slightly larger for pixel fonts */
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- THE TERMINAL CONTAINER --- */
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: #1a1a1a; /* Dark Grey Box */
+            border: 2px solid #4a4a4a;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.1); /* Faint green hacker glow */
+            padding: 40px;
+            margin-top: 50px;
+        }
+
+        /* --- HEADERS --- */
+        h1 {
+            color: #ffb703; /* "The One Ring" Gold */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 3rem;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+        
+        h2 {
+            color: #ffb703; /* Gold */
+            border-bottom: 1px dashed #4a4a4a;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #00ff41; /* "Matrix" or "Magic" Green */
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        /* --- LINKS --- */
+        a {
+            color: #4cc9f0; /* Spectral/Mithril Blue */
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: #ffb703; /* Turns Gold on hover */
+            text-decoration: underline;
+        }
+
+        /* --- LISTS --- */
+        ul {
+            list-style-type: square; /* Square bullets match pixel theme */
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+
+        /* --- IMAGE STYLING --- */
+        .profile-pic {
+            display: block;
+            margin: 0 auto 20px auto;
+            border-radius: 50%; /* Makes it a circle */
+            border: 3px solid #ffb703;
+            width: 150px; /* Adjust size here */
+        }
+        
+        /* --- FOOTER --- */
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 1rem;
+            opacity: 0.6;
+            border-top: 1px solid #333;
+            padding-top: 20px;
+        }
+    </style>
+</head>
 <body>
 
-    <header>
-        <h1>Welcome to Tharkun Dur!</h1>
-        <p>**Threat Analysis | Detection Engineering & Threat Hunting (DE&TH) | Cyber Threat Intel**</p>
-    </header>
+    <div class="container">
+        <header>
+            <img src="gandalf.png" alt="Pixel Wizard" class="profile-pic">
 
-    <hr>
+            <h1>Tharkun Dur</h1>
+            <p class="subtitle">Threat Analysis | Detection Engineering | Cyber Threat Intel</p>
+        </header>
 
-    <main>
-        <h2>Latest Write-ups</h2>
-        <ul>
-            <li>
-                <a href="https://github.com/tharkun-intel/threat-research/blob/main/threat-research/gcash-spam-kit-analysis.md" target="_blank">
-                    Analysis: GCash Spam Kit (Phishing Campaign)
-                </a>
-            </li>
+        <main>
+            <h2>:: Transmission Log (Latest Write-ups)</h2>
+            <ul>
+                <li>
+                    <a href="https://github.com/tharkun-intel/threat-research/blob/main/threat-research/gcash-spam-kit-analysis.md" target="_blank">
+                        [ANALYSIS] GCash Spam Kit (Phishing Campaign)
+                    </a>
+                </li>
+                
+                <li><a href="#">[PENDING] Threat Intel Tools</a></li>
+            </ul>
             
-            <li><a href="#">Article 2: Threat Intel Tools (Coming Soon)</a></li>
-        </ul>
-        
-        <h2>About Me</h2>
-        <p>I am a security researcher focusing on CTI and detection engineering & threat hunting.</p>
-    </main>
+            <h2>:: User Identity (About Me)</h2>
+            <p>I am a security researcher wandering the digital wastes. Focus areas include CTI, Detection Engineering, and hunting orcs in the network.</p>
+        </main>
 
-    <footer>
-        <p>Connect with me on <a href="https://github.com/tharkun-intel">GitHub</a></p>
-    </footer>
+        <footer>
+            <p>End Transmission. Connect on <a href="https://github.com/tharkun-intel">GitHub</a>.</p>
+        </footer>
+    </div>
 
 </body>
 </html>
