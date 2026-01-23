@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis: GCash Clickjacking | Tharkun Dur</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CORE THEME --- */
+        body {
+            background-color: #0d0d0d;
+            color: #b3b3b3;
+            font-family: 'VT323', monospace;
+            font-size: 1.3rem;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background-color: #1a1a1a;
+            border: 2px solid #4a4a4a;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
+            padding: 40px;
+            margin-top: 20px;
+            margin-bottom: 50px;
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1 {
+            color: #ffb703; /* Gold */
+            text-transform: uppercase;
+            font-size: 2.5rem;
+            border-bottom: 2px solid #ffb703;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #00ff41; /* Hacker Green */
+            margin-top: 50px;
+            border-left: 5px solid #00ff41;
+            padding-left: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h3 {
+            color: #4cc9f0; /* Blue Sub-headers */
+            margin-top: 30px;
+            border-bottom: 1px dashed #444;
+            display: inline-block;
+        }
+        
+        strong { color: #fff; }
+
+        a { color: #4cc9f0; text-decoration: none; }
+        a:hover { color: #ffb703; text-decoration: underline; }
+
+        hr { border: 0; border-top: 1px dashed #4a4a4a; margin: 30px 0; }
+
+        /* --- IMAGES --- */
+        .img-container {
+            text-align: center;
+            margin: 30px 0;
+            background: #222;
+            padding: 10px;
+            border: 1px solid #333;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #4a4a4a;
+        }
+        .caption {
+            font-size: 1rem;
+            color: #888;
+            display: block;
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        /* --- TABLES --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 1.1rem;
+            background: #111;
+        }
+        th {
+            background-color: #333;
+            color: #ffb703;
+            text-align: left;
+            padding: 12px;
+            border: 1px solid #4a4a4a;
+        }
+        td {
+            padding: 12px;
+            border: 1px solid #4a4a4a;
+            vertical-align: top;
+        }
+        tr:nth-child(even) { background-color: #1a1a1a; }
+        tr:hover { background-color: #252525; }
+
+        /* --- CODE BLOCKS --- */
+        pre {
+            background-color: #000;
+            border: 1px solid #00ff41;
+            padding: 20px;
+            overflow-x: auto;
+            color: #00ff41;
+            font-family: 'VT323', monospace;
+        }
+
+        /* --- NAVIGATION --- */
+        .nav-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            color: #888;
+        }
+        .nav-link:hover { color: #00ff41; }
+        
+        .tlp-badge {
+            background-color: #fff;
+            color: #000;
+            padding: 2px 6px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="index.html" class="nav-link">&lt;&lt; Return to Base</a>
+
+        <header>
+            <h1>Analysis: Gcash Clickjacking Campaign</h1>
+            <p>
+                <strong>Date:</strong> 2026-01-12 <br>
+                <strong>Type:</strong> Phishing / Viral Scam / Clickjacking <br>
+                <strong>Target:</strong> Philippines (Gcash Users) <br>
+                <strong>TLP:</strong> <span class="tlp-badge">CLEAR</span>
+            </p>
+        </header>
+
+        <hr>
+
+        <main>
+            <h2>📌 TL;DR</h2>
+            <ul>
+                <li><strong>Campaign:</strong> A viral phishing scam targeting GCash users in the Philippines via Facebook Messenger, promising a fake "₱2,000 Anniversary Gift."</li>
+                <li><strong>The Trap:</strong> The site uses a "loop" script and history manipulation to prevent users from clicking "Back," forcing them to spam the link to 5-10 friends to "unlock" the prize.</li>
+                <li><strong>Social Engineering:</strong> Uses fake live comments, "winner" popups, and confetti effects to create false urgency and trust.</li>
+                <li><strong>Code Origins:</strong> The toolkit appears to be a "Scam-as-a-Service" template likely purchased on the dark web.
+                    <ul>
+                        <li><strong>Russian comments</strong> were found in the source code.</li>
+                        <li><strong>"Digital fossils"</strong> (commented-out code) revealed previous campaigns targeting <strong>India and Pakistan</strong> (Jio, Airtel, Jazz) via WhatsApp.</li>
+                    </ul>
+                </li>
+                <li><strong>Infrastructure:</strong>
+                    <ul>
+                        <li><strong>Registrar:</strong> West263 International (China), known for abuse-friendly bulk registrations.</li>
+                        <li><strong>Analytics:</strong> Uses Plausible Analytics to track victims while evading ad-blockers.</li>
+                        <li><strong>Hosting:</strong> Images are served via <code>599cdn[.]com</code> rather than official GCash servers.</li>
+                    </ul>
+                </li>
+                <li><strong>Goal:</strong> The phone number input is a dummy; the real goal is to drive massive traffic to an affiliate redirect (<code>go.php</code>) for ad fraud, gambling sites, or malware.</li>
+            </ul>
+
+            <hr>
+
+            <h2>📜 The Story</h2>
+            <p>It started with a notification from a friend on Facebook Messenger. The message promised a 'GCash Grand Giveaway'—a free ₱2,000 (~34 USD) anniversary gift for all users.</p>
+            <p>This immediately caught me off guard. I don't usually receive messages from people giving me money; it's usually the other way around (looking at you, bayad utang reminders). Naturally, as a curious (and broke) trentahin, I had no choice but to click the link and 'claim' my fortune.</p>
+
+            <div class="img-container">
+                <img src="https://github.com/user-attachments/assets/666f7137-d2fd-4170-9f94-3fc773382ef7" alt="Phishing Message">
+                <span class="caption">Figure 1: The "GCash" phishing message I received.</span>
+            </div>
+
+            <h2>🕵️‍♂️ The Investigation</h2>
+
+            <h3>Domain Analysis</h3>
+            <p>From the message, I got the domain below:</p>
+            <p><code>hxxps[:]//gcash6[.]c3se[.]xyz/?anniversary-giveaway=24</code></p>
+            <p>I chucked the domain into URLScan to see where it lands and if there was any cached content (site screenshots, HTML, JS code). I found a screen capture of the scam site, its HTML file, and the JS scripts that the site loads. The domain mimics 'GCash', a popular e-wallet in the Philippines with millions of users. The domain was registered via <code>West263 International Limited</code>. They have a bit of a reputation, appearing regularly in abuse reports for bulk registrations on .shop and .top domains. Geolocation? China.</p>
+
+            <div class="img-container">
+                <img src="https://github.com/user-attachments/assets/c0d0dbd9-ea39-4fe3-967a-229c397b8df0" alt="HTML file">
+                <span class="caption">Figure 2: HTML file and the javascript codes found in URLScan.</span>
+            </div>
+
+            <div class="img-container">
+                <img src="https://github.com/user-attachments/assets/a249fb92-f6ac-404b-87f1-ac48735dc29b" alt="Screenshot domain">
+                <span class="caption">Figure 3: Screenshot of the domain, suspect details highlighted.</span>
+            </div>
+
+            <div class="img-container">
+                <img src="https://github.com/user-attachments/assets/e7a99daf-711e-41dc-9b4e-10fbc9142359" alt="Whois Info">
+                <span class="caption">Figure 4: Whois Info of the domain.</span>
+            </div>
+
+            <h3>Code Analysis</h3>
+            <p>Analysis of the HTML file reveals the page is titled 'GCash ₱2000 Anniversary Grand Giveaway for All Users' and contains logic designed to trap users in a 'loop.'</p>
+            <p>Even if a victim hits the 'Back' button, a coding trick prevents them from leaving the page. Instead, the script forces them to spam different contacts on Facebook Messenger to reach '100%' on a progress bar. To build trust, the page displays hardcoded fake notifications and comments, complete with 'winner' popups and confetti effects. This core 'loop' logic was hidden within an obfuscated script.</p>
+            <p>Based on the code, the goal is not to steal data directly. The phone number input is merely a dummy; the real money is in the traffic. By forcing a viral loop, the attacker generates massive volume for their final redirection (go.php), likely funneling victims to a gambling site, predatory loan app, or malware download.</p>
+
+            <div class="img-container">
+                <img src="https://github.com/user-attachments/assets/f6f19432-24f9-4f5f-a2dd-82f87c6f750b" alt="Deobfuscated code">
+                <span class="caption">Figure 5: Deobfuscated code containing the "loop" logic.</span>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Indicator</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Fake Domain</strong></td>
+                        <td>URL</td>
+                        <td>The page references <code>go.php</code> multiple times. Legitimate GCash promotions are hosted on <code>gcash.com</code>.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Obfuscated JS</strong></td>
+                        <td>Code</td>
+                        <td>Usage of <code>unescape('%20...')</code> to hide the logic for the sharing requirement.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fake CDN</strong></td>
+                        <td>Network</td>
+                        <td>Images are loaded from <code>599cdn.com</code> and <code>cdnmi.com</code>, which are often associated with spam/scam landing pages, not official GCash assets.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Deep Linking</strong></td>
+                        <td>Protocol</td>
+                        <td>Uses <code>fb-messenger://share/?link=</code> to trigger the mobile Messenger app directly, bypassing browser protections.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Redirect Loop</strong></td>
+                        <td>Behavior</td>
+                        <td><code>window.location.href = REDIRECT_URL</code> inside a timer ensures the user is moved to the final destination even if they do nothing.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <span class="caption" style="text-align: center;">Table 1: Functions contained within the HTML file.</span>
+
+            <h3>Attribution & Artifacts</h3>
+            <p>Scattered throughout the file are instructions written in Russian, suggesting the scam toolkit is Russian-made—likely purchased via a Telegram channel or dark web forum.</p>
+            <p>I also found a 'digital fossil': a commented-out text block targeting India and Pakistan. This block listed carriers like Jio, Airtel, and Jazz, formatted specifically for WhatsApp (using asterisks for bolding). This confirms that the toolkit isn't exclusive to the Philippines; it has likely been deployed in those regions as well, modified to target WhatsApp users instead of Facebook Messenger.</p>
+
+            <div class="img-container">
+                <img src="https://github.com/user-attachments/assets/1bfd0b01-e809-4f44-91b3-ad1284a2389d" alt="Russian notes">
+                <span class="caption">Figure 6: Leftover notes in Russian, indicating that the scam toolkit is Russian-made.</span>
+            </div>
+
+            <div class="img-container">
+                <img src="https://github.com/user-attachments/assets/6d8db035-68f5-4a9a-bb31-f7bbc64574d7" alt="Digital Fossil">
+                <span class="caption">Figure 7: 'digital fossil' in the HTML file.</span>
+            </div>
+
+            <h2>⚔️ Tactics, Techniques, and Procedures (TTPs)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tactic</th>
+                        <th>Technique</th>
+                        <th>Procedure (Observed in Sample)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Initial Access</strong></td>
+                        <td>Phishing via Social Media</td>
+                        <td>Distributed via <strong>Facebook Messenger</strong> using deep links (<code>fb-messenger://</code>) to trigger the mobile app directly.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Defense Evasion</strong></td>
+                        <td>Obfuscated Files or Information</td>
+                        <td>Core logic for the "sharing loop" was hidden using <code>document.write(unescape('%20...'))</code> to bypass static analysis.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Defense Evasion</strong></td>
+                        <td>Virtualization/Sandbox Evasion</td>
+                        <td>The analytics script checks for <code>window.navigator.webdriver</code>, <code>_phantom</code>, and <code>Cypress</code>. If detected, it stops tracking to hide from security researchers.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Defense Evasion</strong></td>
+                        <td>Masquerading</td>
+                        <td>The site mimics the <strong>GCash</strong> brand identity (logos, colors) and uses a deceptively similar domain name (<code>gcash6...</code>).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Execution</strong></td>
+                        <td>User Execution</td>
+                        <td>Relies on the user manually clicking "Share" buttons to propagate the scam.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Persistence</strong></td>
+                        <td>Browser Session Manipulation</td>
+                        <td>Uses <strong>History Hijacking</strong> (<code>history.pushState</code> + <code>onhashchange</code>) to trap the user on the page, reloading the site if they attempt to click "Back."</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Discovery</strong></td>
+                        <td>System Information Discovery</td>
+                        <td>Scripts check <code>window.innerWidth</code> and User-Agent to determine if the victim is on a mobile device vs. desktop.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Command & Control</strong></td>
+                        <td>Web Service</td>
+                        <td>Uses <strong>Plausible Analytics</strong> (<code>/api/event</code>) to beacon victim data back to the attacker's dashboard (<code>tj.16gift.com</code>).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Impact</strong></td>
+                        <td>Social Engineering / Fraud</td>
+                        <td>Uses a "Viral Loop" mechanism (fake progress bar, fake errors) to force victims to spam their contacts, driving traffic to affiliate redirection links.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>🛡️ Indicators of Compromise (IOCs)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Value</th>
+                        <th>Context</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Domain</strong></td>
+                        <td><code>gcash6.c3se[.]xyz</code></td>
+                        <td><strong>Landing Page:</strong> The initial phishing URL clicked by the victim.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Domain</strong></td>
+                        <td><code>gcash8.vayv[.]top</code></td>
+                        <td><strong>Canonical Domain:</strong> The URL used for generating new share links (hardcoded in JS).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Domain</strong></td>
+                        <td><code>tj.16gift[.]com</code></td>
+                        <td><strong>C2 / Analytics:</strong> The "Traffic Jungle" domain used to track victim stats via Plausible.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Domain</strong></td>
+                        <td><code>599cdn[.]com</code></td>
+                        <td><strong>Asset Hosting:</strong> Hosting the fake GCash banners and social preview images.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>URL Path</strong></td>
+                        <td><code>/go.php</code></td>
+                        <td><strong>Redirector:</strong> The script that redirects the user to the final payload (gambling/scam site).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>URL Path</strong></td>
+                        <td><code>/api/event</code></td>
+                        <td><strong>Beacon:</strong> The endpoint receiving the analytics data.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Signature</strong></td>
+                        <td><code>ph-gcash01</code></td>
+                        <td><strong>Campaign ID:</strong> Found in the <code>data-domain</code> attribute; identifies this specific Philippines/GCash campaign.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Signature</strong></td>
+                        <td><code>West263 International Limited</code></td>
+                        <td><strong>Registrar:</strong> The organization used to register the phishing domains (known for abuse).</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>🚫 Blocklist (Raw Text)</h3>
+<pre><code>gcash6.c3se[.]xyz
+gcash8.vayv[.]top
+tj.16gift[.]com
+599cdn[.]com</code></pre>
+
+        </main>
+
+        <footer>
+            <p>End Report. <a href="index.html">Return to Base</a>.</p>
+        </footer>
+    </div>
+
+</body>
+</html>
